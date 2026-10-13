@@ -1,0 +1,47 @@
+#include "Timing.h"
+#include <iostream>
+
+using namespace std;
+
+namespace planning {
+    // Initialisation des variables statiques en dehors des constructeurs
+    const string Timing::MONDAY = "Lundi";
+    const string Timing::TUESDAY = "Mardi";
+    const string Timing::WEDNESDAY = "Mercredi";
+    const string Timing::THURSDAY = "Jeudi";
+    const string Timing::FRIDAY = "Vendredi";
+    const string Timing::SATURDAY = "Samedi";
+    const string Timing::SUNDAY = "Dimanche";
+
+    Timing::Timing() : day(MONDAY) {
+        cout << "--- [Trace] Constructeur par defaut Timing ---" << endl;
+    }
+
+    Timing::Timing(string d, const Time& s, const Time& dur) : day(d), start(s), duration(dur) {
+        cout << "--- [Trace] Constructeur d'initialisation Timing ---" << endl;
+    }
+
+    Timing::Timing(const Timing& t) : day(t.day), start(t.start), duration(t.duration) {
+        cout << "--- [Trace] Constructeur de copie Timing ---" << endl;
+    }
+
+    Timing::~Timing() {
+        cout << "--- [Trace] Destructeur Timing ---" << endl;
+    }
+
+    string Timing::getDay() const { return day; }
+    Time Timing::getStart() const { return start; }
+    Time Timing::getDuration() const { return duration; }
+
+    void Timing::setDay(string d) { day = d; }
+    void Timing::setStart(const Time& s) { start = s; }
+    void Timing::setDuration(const Time& dur) { duration = dur; }
+
+    void Timing::display() const {
+        cout << day << " de ";
+        start.display();
+        cout << " (";
+        duration.display();
+        cout << ")";
+    }
+}
