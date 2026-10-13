@@ -1,10 +1,14 @@
 #include <iostream>
-#include <time.h>
 using namespace std;
 
+#include "Schedulable.h"
 #include "Professor.h"
 #include "Group.h"
 #include "Classroom.h"
+#include "Event.h"
+#include "Timing.h"
+
+using namespace planning; 
 
 int  Menu();
 void Essai1();
