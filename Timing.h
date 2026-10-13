@@ -11,7 +11,6 @@ namespace planning {
         Time duration;
 
     public:
-        // Constantes statiques
         static const std::string MONDAY;
         static const std::string TUESDAY;
         static const std::string WEDNESDAY;
@@ -34,7 +33,11 @@ namespace planning {
         void setDuration(const Time& dur);
 
         void display() const;
+
+        // E. Operateurs de comparaison
+        bool operator>(const Timing& t) const;
+        bool operator<(const Timing& t) const;
+        bool operator==(const Timing& t) const;
     };
 }
-
 #endif
