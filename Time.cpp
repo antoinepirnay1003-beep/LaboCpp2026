@@ -1,19 +1,38 @@
 #include "Time.h"
 #include <iostream>
+#include "TimeException.h"
 
 using namespace std;
 
 namespace planning {
     Time::Time() : hour(0), minute(0) { cout << "--- [Trace] Constructeur par defaut Time ---" << endl; }
-    Time::Time(int h, int m) : hour(h), minute(m) { cout << "--- [Trace] Constructeur init (h,m) Time ---" << endl; }
-    Time::Time(int m) : hour(m / 60), minute(m % 60) { cout << "--- [Trace] Constructeur init (m) Time ---" << endl; }
+    
+    Time::Time(int h, int m) { 
+        setHour(h); 
+        setMinute(m); 
+        cout << "--- [Trace] Constructeur init (h,m) Time ---" << endl; 
+    }
+    
+    Time::Time(int m) { 
+        setHour(m / 60); 
+        setMinute(m % 60); 
+        cout << "--- [Trace] Constructeur init (m) Time ---" << endl; 
+    }
+    
     Time::Time(const Time& t) : hour(t.hour), minute(t.minute) { cout << "--- [Trace] Constructeur de copie Time ---" << endl; }
     Time::~Time() { cout << "--- [Trace] Destructeur Time ---" << endl; }
-
+    
     int Time::getHour() const { return hour; }
     int Time::getMinute() const { return minute; }
-    void Time::setHour(int h) { hour = h; }
-    void Time::setMinute(int m) { minute = m; }
+    void Time::setHour(int h) { 
+   	 if (h < 0 || h > 23) throw TimeException("Heure invalide", TimeException::INVALID_HOUR);
+   	 	hour = h; 
+    }
+
+    void Time::setMinute(int m) { 
+    	if (m < 0 || m > 59) throw TimeException("Minute invalide", TimeException::INVALID_MINUTE);
+    	minute = m; 
+    }
 
     void Time::display() const {
         cout << hour << "h";
@@ -30,6 +49,7 @@ namespace planning {
 
     Time Time::operator+(int m) const {
         int total_mins = hour * 60 + minute + m;
+        if (total_mins < 0 || total_mins > 1439) throw TimeException("Debordement", TimeException::OVERFLOW);
         return Time(total_mins / 60, total_mins % 60);
     }
 
@@ -39,22 +59,27 @@ namespace planning {
 
     Time Time::operator+(const Time& t) const {
         int total_mins = hour * 60 + minute + t.hour * 60 + t.minute;
+        if (total_mins < 0 || total_mins > 1439) throw TimeException("Debordement", TimeException::OVERFLOW);
         return Time(total_mins / 60, total_mins % 60);
     }
 
     Time Time::operator-(int m) const {
         int total_mins = hour * 60 + minute - m;
+        if (total_mins < 0 || total_mins > 1439) throw TimeException("Debordement", TimeException::OVERFLOW);
         return Time(total_mins / 60, total_mins % 60);
     }
 
     Time Time::operator-(const Time& t) const {
         int total_mins = (hour * 60 + minute) - (t.hour * 60 + t.minute);
+        if (total_mins < 0 || total_mins > 1439) throw TimeException("Debordement", TimeException::OVERFLOW);
         return Time(total_mins / 60, total_mins % 60);
     }
-	Time operator-(int m, const Time& t) {
-	int total_mins = m - (t.hour * 60 + t.minute);
-	return Time(total_mins / 60, total_mins % 60);
-	}
+    
+    Time operator-(int m, const Time& t) {
+        int total_mins = m - (t.hour * 60 + t.minute);
+        if (total_mins < 0 || total_mins > 1439) throw TimeException("Debordement", TimeException::OVERFLOW);
+        return Time(total_mins / 60, total_mins % 60);
+    }
 	
 	
     // B. Operateurs de comparaison
@@ -74,6 +99,24 @@ namespace planning {
         return (hour == t.hour && minute == t.minute);
     }
 
+
+    // C. Operateurs de flux
+    ostream& operator<<(ostream& os, const Time& t) {
+        os << t.getHour() << "h";
+        if (t.getMinute() < 10) os << "0";
+        os << t.getMinute();
+        return os;
+    }
+
+    istream& operator>>(istream& is, Time& t) {
+        int h, m;
+        char h_char; // Pour absorber le 'h' tapé par l'utilisateur
+        is >> h >> h_char >> m;
+        t.setHour(h);
+        t.setMinute(m);
+        return is;
+    }
+    
     // D. Operateurs d'incrementation (++ et -- ajoutent/retirent 30 mins)
     Time& Time::operator++() {
         *this = *this + 30;
@@ -95,22 +138,5 @@ namespace planning {
         Time temp = *this;
         *this = *this - 30;
         return temp;
-    }
-
-    // C. Operateurs de flux
-    ostream& operator<<(ostream& os, const Time& t) {
-        os << t.getHour() << "h";
-        if (t.getMinute() < 10) os << "0";
-        os << t.getMinute();
-        return os;
-    }
-
-    istream& operator>>(istream& is, Time& t) {
-        int h, m;
-        char h_char; // Pour absorber le 'h' tapé par l'utilisateur
-        is >> h >> h_char >> m;
-        t.setHour(h);
-        t.setMinute(m);
-        return is;
     }
 }

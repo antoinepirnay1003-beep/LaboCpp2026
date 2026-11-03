@@ -1,4 +1,5 @@
 #include "Timing.h"
+#include "TimingException.h"
 #include <iostream>
 
 using namespace std;
@@ -13,7 +14,10 @@ namespace planning {
     const string Timing::SUNDAY = "Dimanche";
 
     Timing::Timing() : day(MONDAY) { cout << "--- [Trace] Constructeur par defaut Timing ---" << endl; }
-    Timing::Timing(string d, const Time& s, const Time& dur) : day(d), start(s), duration(dur) { cout << "--- [Trace] Constructeur init Timing ---" << endl; }
+    Timing::Timing(string d, const Time& s, const Time& dur) : start(s), duration(dur) { 
+    setDay(d);
+    cout << "--- [Trace] Constructeur init Timing ---" << endl; 
+}
     Timing::Timing(const Timing& t) : day(t.day), start(t.start), duration(t.duration) { cout << "--- [Trace] Constructeur de copie Timing ---" << endl; }
     Timing::~Timing() { cout << "--- [Trace] Destructeur Timing ---" << endl; }
 
@@ -21,7 +25,13 @@ namespace planning {
     Time Timing::getStart() const { return start; }
     Time Timing::getDuration() const { return duration; }
 
-    void Timing::setDay(string d) { day = d; }
+    void Timing::setDay(string d) {
+    if (d != MONDAY && d != TUESDAY && d != WEDNESDAY && d != THURSDAY &&
+        d != FRIDAY && d != SATURDAY && d != SUNDAY) {
+        throw TimingException("Jour invalide", TimingException::INVALID_DAY);
+    }
+    day = d;
+}
     void Timing::setStart(const Time& s) { start = s; }
     void Timing::setDuration(const Time& dur) { duration = dur; }
 

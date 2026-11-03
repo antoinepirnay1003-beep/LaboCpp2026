@@ -1,4 +1,3 @@
-# Remplacer tout le makefile
 Test1: Test1.o Event.o
 	g++ -o Test1 Test1.o Event.o
 
@@ -11,38 +10,53 @@ Test3: Test3.o Event.o Time.o Timing.o
 Test4: Test4.o Event.o Time.o Timing.o Schedulable.o Professor.o Group.o Classroom.o
 	g++ -o Test4 Test4.o Event.o Time.o Timing.o Schedulable.o Professor.o Group.o Classroom.o
 
-Test1.o: Test1.cpp Event.h
+Test5: Test5.o Event.o Time.o Timing.o Schedulable.o Professor.o Group.o Classroom.o Exception.o TimeException.o TimingException.o
+	g++ -o Test5 Test5.o Event.o Time.o Timing.o Schedulable.o Professor.o Group.o Classroom.o Exception.o TimeException.o TimingException.o
+
+Test1.o: Test1.cpp
 	g++ -c Test1.cpp
 
-Test2.o: Test2.cpp Event.h Time.h Timing.h
+Test2.o: Test2.cpp
 	g++ -c Test2.cpp
 
-Test3.o: Test3.cpp Event.h Time.h Timing.h
+Test3.o: Test3.cpp
 	g++ -c Test3.cpp
 
-Test4.o: Test4.cpp Schedulable.h Professor.h Group.h Classroom.h Event.h
+Test4.o: Test4.cpp
 	g++ -c Test4.cpp
 
-Event.o: Event.cpp Event.h Timing.h
+Test5.o: Test5.cpp
+	g++ -c Test5.cpp
+
+Event.o: Event.cpp
 	g++ -c Event.cpp
 
-Time.o: Time.cpp Time.h
+Time.o: Time.cpp
 	g++ -c Time.cpp
 
-Timing.o: Timing.cpp Timing.h Time.h
+Timing.o: Timing.cpp
 	g++ -c Timing.cpp
 
-Schedulable.o: Schedulable.cpp Schedulable.h
+Schedulable.o: Schedulable.cpp
 	g++ -c Schedulable.cpp
 
-Professor.o: Professor.cpp Professor.h Schedulable.h
+Professor.o: Professor.cpp
 	g++ -c Professor.cpp
 
-Group.o: Group.cpp Group.h Schedulable.h
+Group.o: Group.cpp
 	g++ -c Group.cpp
 
-Classroom.o: Classroom.cpp Classroom.h Schedulable.h
+Classroom.o: Classroom.cpp
 	g++ -c Classroom.cpp
 
+Exception.o: Exception.cpp
+	g++ -c Exception.cpp
+
+TimeException.o: TimeException.cpp
+	g++ -c TimeException.cpp
+
+TimingException.o: TimingException.cpp
+	g++ -c TimingException.cpp
+
 clean:
-	rm -f *.o Test1 Test2 Test3 Test4
+	rm -f *.o Test1 Test2 Test3 Test4 Test5

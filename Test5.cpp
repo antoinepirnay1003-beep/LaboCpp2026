@@ -3,6 +3,9 @@
 #include "Time.h"
 #include "Timing.h"
 #include "Event.h"
+#include "Exception.h"
+#include "TimeException.h"
+#include "TimingException.h"
 
 using namespace std;
 using namespace planning;
@@ -311,41 +314,55 @@ void Essai10()
 /**********************************************************************************************/
 void Essai11()
 {
-  cout << "----- 11. Gestion de plusieurs exceptions simultanement ---" << endl;
-  // A COMPLETER : Traitez TOUTES les exceptions susceptible d'etre lancee par le bloc de code suivant (try...catch)
+    cout << "----- 11. Gestion de plusieurs exceptions simultanement ---" << endl;
 
-  // ...
-  {
-    Timing t;
-    string day;
-    Time hour;
-    int d;
-    cout << "Encodez un timing :" << endl;
-    cout << "Jour = ";
-    getline(cin,day);
-    t.setDay(day);
-    cout << "Heure = ";
-    cin >> hour;
-    t.setStart(hour);
-    cout << "Duree en minutes = ";
-    cin >> d;
-    cin.ignore();
-    t.setDuration(Time(d));
-    cout << endl << "Timing encode : ";
-    t.display();
-    cout << endl;
-    Event e(1,"Theorie C++");
-    cout << "Voici un Event non planifie : ";
-    e.display();
-    cout << "Voulez-vous planifier cet Event (o/n) ? ";
-    char ch;
-    cin >> ch;
-    cin.ignore();
-    if (ch == 'o') e.setTiming(t);
-    cout << "Voici le Timing de l'Event planifie : ";
-    e.getTiming().display();  // !!!
-  }
-  // ...
+    try {
+        Timing t;
+        string day;
+        Time hour;
+        int d;
+        
+        cout << "Encodez un timing :" << endl;
+        cout << "Jour = ";
+        getline(cin,day);
+        t.setDay(day); // Risque d'exception INVALID_DAY
+        
+        cout << "Heure = ";
+        cin >> hour;
+        t.setStart(hour); // Risque d'exceptions INVALID_HOUR / INVALID_MINUTE
+        
+        cout << "Duree en minutes = ";
+        cin >> d;
+        cin.ignore();
+        t.setDuration(Time(d));
+        
+        cout << endl << "Timing encode : ";
+        t.display();
+        cout << endl;
+        
+        Event e(1,"Theorie C++");
+        cout << "Voici un Event non planifie : ";
+        e.display();
+        
+        cout << "Voulez-vous planifier cet Event (o/n) ? ";
+        char ch;
+        cin >> ch;
+        cin.ignore();
+        
+        if (ch == 'o') e.setTiming(t);
+        
+        cout << "Voici le Timing de l'Event planifie : ";
+        // Risque d'exception NO_TIMING si on a repondu 'n' :
+        e.getTiming().display(); 
+        cout << endl;
+
+   } catch (const TimingException& e) {
+        cout << ">>> Erreur interceptee (Timing) : " << e.getMessage() << endl;
+    } catch (const TimeException& e) {
+        cout << ">>> Erreur interceptee (Time) : " << e.getMessage() << endl;
+    } catch (const Exception& e) {
+        cout << ">>> Erreur interceptee (Generique) : " << e.getMessage() << endl;
+    }
 }
 
 
