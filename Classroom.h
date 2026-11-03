@@ -21,5 +21,7 @@ namespace planning {
         std::string toString() const override;
         std::string tuple() const override;
     };
+   std::ostream& operator<<(std::ostream& os, const Classroom& c);
+   std::istream& operator>>(std::istream& is, Classroom& c);
 }
 #endif

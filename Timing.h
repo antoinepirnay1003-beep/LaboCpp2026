@@ -39,5 +39,7 @@ namespace planning {
         bool operator<(const Timing& t) const;
         bool operator==(const Timing& t) const;
     };
+    std::ostream& operator<<(std::ostream& os, const Timing& t);
+    std::istream& operator>>(std::istream& is, Timing& t);
 }
 #endif

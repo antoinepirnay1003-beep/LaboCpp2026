@@ -82,4 +82,46 @@ namespace planning {
     bool Timing::operator==(const Timing& t) const {
         return (day == t.day && start == t.start && duration == t.duration);
     }
+    ostream& operator<<(ostream& os, const Timing& t) {
+        os << "<Timing>" << endl;
+        os << "<day>" << endl;
+        os << t.getDay() << endl;
+        os << "</day>" << endl;
+        
+        os << "<start>" << endl;
+        os << t.getStart(); // Appelle automatiquement l'opérateur << de Time !
+        os << "</start>" << endl;
+        
+        os << "<duration>" << endl;
+        os << t.getDuration(); // Appelle automatiquement l'opérateur << de Time !
+        os << "</duration>" << endl;
+        
+        os << "</Timing>" << endl;
+        return os;
+    }
+
+    istream& operator>>(istream& is, Timing& t) {
+        string ligne;
+        getline(is, ligne); // <Timing>
+        
+        getline(is, ligne); // <day>
+        getline(is, ligne); // valeur du jour
+        t.setDay(ligne);
+        getline(is, ligne); // </day>
+        
+        getline(is, ligne); // <start>
+        Time start;
+        is >> start; // Appelle automatiquement l'opérateur >> de Time !
+        t.setStart(start);
+        getline(is, ligne); // </start>
+        
+        getline(is, ligne); // <duration>
+        Time duration;
+        is >> duration; // Appelle automatiquement l'opérateur >> de Time !
+        t.setDuration(duration);
+        getline(is, ligne); // </duration>
+        
+        getline(is, ligne); // </Timing>
+        return is;
+    }
 }

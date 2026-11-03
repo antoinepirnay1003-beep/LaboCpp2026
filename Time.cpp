@@ -100,20 +100,35 @@ namespace planning {
     }
 
 
-    // C. Operateurs de flux
+    // C. Operateurs de flux (pour la serialisation XML)
     ostream& operator<<(ostream& os, const Time& t) {
-        os << t.getHour() << "h";
-        if (t.getMinute() < 10) os << "0";
-        os << t.getMinute();
+        os << "<Time>" << endl;
+        os << "<hour>" << endl;
+        os << t.getHour() << endl;
+        os << "</hour>" << endl;
+        os << "<minute>" << endl;
+        os << t.getMinute() << endl;
+        os << "</minute>" << endl;
+        os << "</Time>" << endl;
         return os;
     }
 
     istream& operator>>(istream& is, Time& t) {
-        int h, m;
-        char h_char; // Pour absorber le 'h' tapé par l'utilisateur
-        is >> h >> h_char >> m;
-        t.setHour(h);
-        t.setMinute(m);
+        string ligne;
+        // L'opérateur >> fait appel 8 fois à la fonction getline pour lire les 8 lignes[cite: 26]
+        getline(is, ligne); // lit <Time>
+        
+        getline(is, ligne); // lit <hour>
+        getline(is, ligne); // lit la valeur de l'heure
+        t.setHour(stoi(ligne)); // stoi convertit le texte en int
+        getline(is, ligne); // lit </hour>
+        
+        getline(is, ligne); // lit <minute>
+        getline(is, ligne); // lit la valeur des minutes
+        t.setMinute(stoi(ligne)); // stoi convertit le texte en int
+        getline(is, ligne); // lit </minute>
+        
+        getline(is, ligne); // lit </Time>
         return is;
     }
     

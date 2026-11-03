@@ -23,12 +23,15 @@ namespace planning {
         // Remplace les anciennes déclarations par celles-ci :
 	Timing getTiming() const;
 	void setTiming(const Timing& t);
+	void clearTiming();
         void setCode(int c);
         void setTitle(const char* t);
 
 
         void display() const;
     };
+    std::ostream& operator<<(std::ostream& os, const Event& e);
+    std::istream& operator>>(std::istream& is, Event& e);
 }
 
 #endif
